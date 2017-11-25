@@ -5,15 +5,15 @@
 
 struct match *match_create(){
 	struct match *m = malloc(sizeof(struct match));
-	m->player0 = (random() % 10) + 5; /* min 5, max 15 */
-	m->player1 = (random() % 10) + 5;
+	m->stack0 = (random() % 10) + 5; /* min 5, max 15 */
+	m->stack1 = (random() % 10) + 5;
 	m->turn = 0;
 	return m;
 }
 
 void match_copy(struct match *dest, struct match *src){
-	dest->player0 = src->player0;
-	dest->player1 = src->player1;
+	dest->stack0 = src->stack0;
+	dest->stack1 = src->stack1;
 	dest->turn = src->turn;
 }
 
@@ -21,10 +21,10 @@ void match_copy(struct match *dest, struct match *src){
 
 void match_play(int elements, struct match *m){
 	if (m->turn == 0){
-		m->player1 -= elements;
+		m->stack1 -= elements;
 		m->turn = 1;
 	} else {
-		m->player0 -= elements;
+		m->stack0 -= elements;
 		m->turn = 1;
 	}
 }
@@ -36,30 +36,49 @@ int match_getturn(struct match *m){
 // TODO: match_islegit
 
 int match_isover(struct match *m){
-	if (m->player0==0 && m->player1==0)
+	if (m->stack0==0 && m->stack1==0)
 		return 1;
 	else
 		return 0;
 }
 
+int match_numberstacks(struct match *m){
+	if (m->stack0==0){
+		return 1;
+	} else if (m->stack1==0){
+		return 0;
+	} else{
+		return 2;
+	}
+}
+
+int match_getelements(struct match *m, int pila){
+	if (pila==0){
+		return m->stack0;
+	} else{
+		return m->stack1;
+	}
+}
+
 // TODO: match_iserr
 
 void match_show(struct match *m){
-	printf("NIM GAME");
+	printf("---------NIM GAME---------\n");
 
-	//player0
-	printf("\tPlayer 1:\t"); 
-	for (int i=0; i<m->player0; i++) {
+	//stack0
+	printf("Pila 1:\t"); 
+	for (int i=0; i<m->stack0; i++) {
 		printf("*");
 	}
 	printf("\n");
 
-	//player1
-	printf("\tPlayer 2:\t"); 
-	for (int i=0; i<m->player1; i++) {
+	//stack1
+	printf("Pila 2:\t"); 
+	for (int i=0; i<m->stack1; i++) {
 		printf("*");
 	}
 	printf("\n");
+	printf("--------------------------\n");
 }
 
 void match_destroy(struct match *m){

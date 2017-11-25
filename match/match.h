@@ -3,11 +3,11 @@
 
 /* 
  * This struct represents a Nim match.
- * The stack of each player is represented by the int variables "player0" and "player1"
+ * The stack of each player is represented by the int variables "stack0" and "stack1"
  * "turn" indicates which player is currently playing (0 for player0, 1 for player1).
  */
 struct match{
-	int player0, player1;
+	int stack0, stack1;
 	char turn;
 };
 
@@ -44,6 +44,21 @@ int match_getturn(struct match *m);
 int match_isover(struct match *m);
 
 // TODO: match_iserr
+
+/*
+ * "match_numberstacks" returns:
+ *		1 if stack0 is empty and stack1 not
+ *		0 if stack1 is empty and stack0 not
+ *		2 if stack0 and stack1 are both not empty
+ */
+int match_numberstacks(struct match *m);
+
+/*
+ * TODO
+ * pila può valere solo 0 o 1;
+ */
+int match_getelements(struct match *m, int pila);
+
 
 /* 
  * "match_show" prints on stdout a representation of the match "m".
