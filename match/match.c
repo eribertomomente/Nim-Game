@@ -11,29 +11,10 @@ struct match *match_create(){
 	return m;
 }
 
-void match_copy(struct match *dest, struct match *src){
-	dest->stack0 = src->stack0;
-	dest->stack1 = src->stack1;
-	dest->turn = src->turn;
-}
-
-//TODO: match_fakeprev
-
-void match_play(int elements, struct match *m){
-	if (m->turn == 0){
-		m->stack1 -= elements;
-		m->turn = 1;
-	} else {
-		m->stack0 -= elements;
-		m->turn = 1;
-	}
-}
 
 int match_getturn(struct match *m){
 	return m->turn;
 }
-
-// TODO: match_islegit
 
 int match_isover(struct match *m){
 	if (m->stack0==0 && m->stack1==0)
@@ -52,15 +33,13 @@ int match_numberstacks(struct match *m){
 	}
 }
 
-int match_getelements(struct match *m, int pila){
-	if (pila==0){
+int match_getelements(struct match *m, int stack){
+	if (stack==0){
 		return m->stack0;
 	} else{
 		return m->stack1;
 	}
 }
-
-// TODO: match_iserr
 
 void match_show(struct match *m){
 	printf("---------NIM GAME---------\n");

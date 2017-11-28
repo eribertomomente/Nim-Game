@@ -1,14 +1,11 @@
 all: nimclient nimserver
 
 
-
 nimclient: nimclient.o common.o match.o sock.o
 	clang nimclient.o sock.o common.o match.o -o nimclient
 
 nimserver: nimserver.o common.o sock.o arbiter.o
 	clang nimserver.o sock.o common.o arbiter.o match.o -o nimserver
-
-
 
 
 common.o: common.c common.h

@@ -21,7 +21,7 @@ int main (int argc, char **argv)
   // imposto l'handler per SIGCHLD, in modo da non creare processi zombie
   signal(SIGCHLD, handle_sigchld);
 
-  // seme random
+  // imposto seme random
   srandom(129394);
 
   // apro il socket di ascolto
@@ -38,6 +38,7 @@ int main (int argc, char **argv)
   // se è impegnato da un altro server non si potrà rimuovere, ma bind()
   // successivamente mi darà errore
   unlink(SOCKADDR);
+
   // lego l'indirizzo al socket di ascolto
   check(bind(sock, (struct sockaddr *)&addr, sizeof addr), 2, "bind()");
 
@@ -90,13 +91,10 @@ int main (int argc, char **argv)
     //thread arbitro
     pthread_t thr;    
 
-    /* Argomenti per l'arbitro */
+    // Argomenti per l'arbitro
     int pair[2] = {client0_fd,client1_fd};
 
-    /* SIGNAL - Blocco di SIGINT */
-    // pthread_sigmask(SIG_BLOCK, &sigset, NULL);
-
-    /* Thread arbitro */
+    // Thread arbitro
     pthread_create(&thr,NULL,arbiter,(void *)pair);
 
   }

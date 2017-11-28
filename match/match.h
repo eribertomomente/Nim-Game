@@ -18,32 +18,14 @@ struct match{
 struct match *match_create();
 
 /* 
- * "match_copy" copies the instance of struct match "src" in "dest".
- */
-void match_copy(struct match *dest, struct match *src);
-
-// TODO: match_fakeprev
-
-/* 
- * "match_play" simulates a step in the game.
- * It removes "elements" elements from the stack of the opposite player 
- *    to the one who is currently playing in the match m.
- */
-void match_play(int elements, struct match *m);
-
-/* 
  * "match_getturn" getter of the field "turn". 
  */
 int match_getturn(struct match *m);
-
-// TODO: match_islegit
 
 /* 
  * "match_isover" returns 1 if the match is over, 0 otherwise.
  */
 int match_isover(struct match *m);
-
-// TODO: match_iserr
 
 /*
  * "match_numberstacks" returns:
@@ -54,10 +36,11 @@ int match_isover(struct match *m);
 int match_numberstacks(struct match *m);
 
 /*
- * TODO
- * pila può valere solo 0 o 1;
+ * "match_getelements" returns the number of remaining elements from:
+ * 		the first stack, if stack = 0
+ * 		the second stack, if stack = 1
  */
-int match_getelements(struct match *m, int pila);
+int match_getelements(struct match *m, int stack);
 
 
 /* 

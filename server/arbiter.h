@@ -1,4 +1,12 @@
-/* arbiter riceve come argomento un'array di due int, i file descriptor dei
- *   due capi dei socket aperti con i client per la partita di nim che dovrà
- *   portare avanti. */
+/* 
+ * "arbiter" gets as arguments two file desc of the client's sockets playing a nim match
+ *  It conduces a nim game giving each player its own turn until the match is over.
+ */
 void *arbiter(void *args);
+
+/*
+ * "make_move" simulate a step on the nim game.
+ * "m" is the current match
+ * "client" is the fd of the player who is currently playing
+ */
+struct match *make_move (int client, struct match *m);

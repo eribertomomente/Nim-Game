@@ -1,9 +1,3 @@
-/*
- * common.c
- *
- * Funzioni di utilità usate sia da upperserver.c che da upperclient.c
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 
