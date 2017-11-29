@@ -85,7 +85,7 @@ struct match *make_move (int client, struct match *m){
 		char *buffer = malloc(sizeof(char));
 
 		f = sock_readmsg(client, buffer);
-		check(f, 3, "Errore nella risposta dal client");
+		check(f, 3, ERRSERVER);
 
 		// cast della risposta dal client in int
 		stack_choice = atoi(buffer);

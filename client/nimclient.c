@@ -137,6 +137,7 @@ int getnatural(){
   int i;
   char buffer[BUFFER_LINE+1];
   fgets(buffer,BUFFER_LINE,stdin);
+  fseek(stdin,0,SEEK_END);
   i = atoi(buffer);
   return i;
 }
