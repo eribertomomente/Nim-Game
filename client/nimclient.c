@@ -109,7 +109,7 @@ int main() {
     // invio all'arbitro la scelta dell'utente
     buffer = malloc(sizeof(int));
     // converto choice in (char *)
-    sprintf(buffer, "%d", choice);
+    sprintf(buffer, "%d", elts_toremove);
     check(sock_sendmsg(sock, buffer), 4, ERR4);
 
     free(buffer);

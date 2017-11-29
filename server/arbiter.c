@@ -103,7 +103,6 @@ struct match *make_move (int client, struct match *m){
 	
 	// cast della risposta dal client in int
 	int elts_toremove = atoi(buffer);
-	
 	free(buffer);
 
 
