@@ -36,18 +36,18 @@ void *arbiter(void *args){
 
 	// annuncio del vincitore:
 	// il client che ha effettuato l'ultima mossa ha "concesso" il turno all'avversario
-	// -> il client indicato da turn, a questo punto, ha vinto la partita
+	// -> il client indicato da turn, a questo punto, ha perso
 	if (m->turn == 0){
-		sock_sendmsg(client0_fd, YOUWON);
-		sock_sendmsg(client1_fd, YOULOST);
+		check(sock_sendmsg(client0_fd, YOULOST), 4, ERR4);
+		check(sock_sendmsg(client1_fd, YOUWON), 4, ERR4);
 	} else {
-		sock_sendmsg(client1_fd, YOUWON);
-		sock_sendmsg(client0_fd, YOULOST);
+		check(sock_sendmsg(client1_fd, YOULOST), 4, ERR4);
+		check(sock_sendmsg(client0_fd, YOUWON), 4, ERR4);
 	}
 
 	// invio la partita ai 2 client per mostrare che la partita è realmente finita
-	sock_sendmatch(client0_fd, m);
-	sock_sendmatch(client1_fd, m);
+	check(sock_sendmatch(client0_fd, m), 4, ERR4);
+	check(sock_sendmatch(client1_fd, m), 4, ERR4);
 		
 	fprintf(stderr, ENDGAME);
 
@@ -88,7 +88,7 @@ struct match *make_move (int client, struct match *m){
 		check(f, 3, "Errore nella risposta dal client");
 
 		// cast della risposta dal client in int
-		stack_choice = atoi(buffer)-1;
+		stack_choice = atoi(buffer);
 
 		free(buffer);
 

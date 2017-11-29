@@ -1,29 +1,27 @@
 #include "../match/match.h"
 
-/* sock_sendmsg invia un messaggio qualunque nel socket identificato 
- *   dal file descriptor fornitogli; restituisce 0 se ha mandato tutto il
- *   messaggio correttamente, -1 altrimenti. */
+/* "sock_sendmsg" sends "msg" through the socket identified by "fd".
+ *  It returns 0 if everything works fine, -1 otherwise.
+ */
 int sock_sendmsg(int fd, char *msg);
-/* sock_recv riceve un messaggio qualunque nel socket identificato dal file
- *   descriptor e lo stampa nello standard output; restuisce 0 se è riuscito a
- *   ricevere un messaggio, -1 altrimenti.
- *   NB: se il messaggio è vuoto non stampa nulla nello standard output.
+
+/* "sock_recvmsg" receives a message from the socket identified by "fd" and prints it.
+ *  It returns 0 if everything works fine, -1 otherwise.
  */
 int sock_recvmsg(int fd);
 
 /*
- * TODO
+ * "sock_readmsg" receives a message from the socket identified by "fd" and store it in "buffer".
+ *  It returns 0 if everything works fine, -1 otherwise.
  */
 int sock_readmsg(int fd, char *buffer);
 
-
-
-/* sock_sendmatch invia la struttura match nel socket fornitogli; restituisce
- *   0 se ha mandato tutta la struttura correttamente, -1 altrimenti.
+/* "sock_sendmatch" sends the match "m" through the socket identified by "fd".
+ *  It returns 0 if everything works fine, -1 otherwise.
  */
 int sock_sendmatch(int fd, struct match *m);
-/* sock_recvmatch riceve una struttura match nel socket identificato dal file
- *   descriptor fornitogli, scrivendola sul puntatore passatogli come argomento;
- *   restituisce 0 se ha successo, -1 altrimenti e non alloca spazio.
+
+/* "sock_recvmatch" receives a match from the socket identified by "fd" and store it in "m".
+ *  It returns 0 if everything works fine, -1 otherwise.
  */
 int sock_recvmatch(int fd, struct match *m);

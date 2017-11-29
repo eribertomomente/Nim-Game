@@ -22,11 +22,11 @@ int main (int argc, char **argv)
   signal(SIGCHLD, handle_sigchld);
 
   // imposto seme random
-  srandom(129394);
+  srandom(25122017);
 
   // apro il socket di ascolto
   int sock = socket(AF_LOCAL, SOCK_STREAM, 0);
-  check(sock, 1, "socket()");
+  check(sock, 1, ERR1);
 
   // imposto l'indirizzo del socket
   struct sockaddr_un addr = {
@@ -40,7 +40,7 @@ int main (int argc, char **argv)
   unlink(SOCKADDR);
 
   // lego l'indirizzo al socket di ascolto
-  check(bind(sock, (struct sockaddr *)&addr, sizeof addr), 2, "bind()");
+  check(bind(sock, (struct sockaddr *)&addr, sizeof addr), 2, ERR2);
 
   // Abilito effettivamente l'ascolto, con un massimo di 5 client in attesa
   listen(sock, 5);
@@ -68,24 +68,21 @@ int main (int argc, char **argv)
     /* SOCKET - Ricezione di due client, invio di due messaggi */
 
     client0_fd = accept(sock, (struct sockaddr *)&client0_addr, &client0_len);
-    sock_sendmsg(client0_fd,WELCOME);
-    sock_sendmsg(client0_fd,WAIT);
-
-    client1_fd = accept(sock,(struct sockaddr *)&client1_addr,&client1_len);
-    sock_sendmsg(client1_fd,WELCOME);
-    sock_sendmsg(client1_fd,"");
-    sock_sendmsg(client1_fd,START);
-
-    sock_sendmsg(client0_fd,START);
-
-
-
-    check(client0_fd, 3, "accept()");
+    check(client0_fd, 3, ERR3);
     fprintf(stderr, "Client_0 accettato.\n");
 
-    check(client1_fd, 3, "accept()");
+    check(sock_sendmsg(client0_fd,WELCOME), 4, ERR4);
+    check(sock_sendmsg(client0_fd,WAIT), 4, ERR4);
+
+    client1_fd = accept(sock,(struct sockaddr *)&client1_addr,&client1_len);
+    check(client1_fd, 3, ERR3);
     fprintf(stderr, "Client_1 accettato.\n");
 
+    check(sock_sendmsg(client1_fd,WELCOME), 4, ERR4);
+    check(sock_sendmsg(client1_fd,""), 4, ERR4);
+    check(sock_sendmsg(client1_fd,START), 4, ERR4);
+
+    check(sock_sendmsg(client0_fd,START), 4, ERR4);
 
 
     //thread arbitro

@@ -5,7 +5,7 @@
 void *arbiter(void *args);
 
 /*
- * "make_move" simulate a step on the nim game.
+ * "make_move" simulates a step on the nim game.
  * "m" is the current match
  * "client" is the fd of the player who is currently playing
  */

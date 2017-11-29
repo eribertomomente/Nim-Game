@@ -7,21 +7,27 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <stdio.h>
+#include <ctype.h>
 
 #define MAXLENGTH 80
 
 #include "../common.h"
 #include "../sock/sock.h"
 
+/*
+ *  TODO
+ */
+int getnatural();
+
 int main() {
 
   struct match* m;  // partita a nim
-  int f;            // flag per eventuali errori
   int choice;       // scelta della pila
+  char *buffer;
 
   // apro il socket per la comunicazione
   int sock = socket(AF_LOCAL, SOCK_STREAM, 0);
-  check(sock, 1, "socket()");
+  check(sock, 1, ERR1);
 
   // imposto l'indirizzo
   struct sockaddr_un addr = {
@@ -31,24 +37,21 @@ int main() {
 
   // mi connetto al server
   int connected = connect(sock, (struct sockaddr *)&addr, sizeof addr);
-  check(connected, 2, "connect()");
+  check(connected, 2, ERR2);
 
   // ricezione e stampa a video dei messaggi di benvenuto e inizializzazione del server
   for(int i =0; i <3; i++){
-    f = sock_recvmsg(sock);
-    check(f, 3, "connessione al server interrotta");
+    check(sock_recvmsg(sock), 4, ERR4);
   }
   
 
   // 1) Ricezione del messaggio del turno
   printf("\n");
-  f = sock_recvmsg(sock);
-  check(f, 3, "connessione al server interrotta");
+  check(sock_recvmsg(sock), 4, ERR4);
 
 
   // 2) Ricezione della rappresentazione del match
-  f = sock_recvmatch(sock, m);
-  check(f, 3, "connessione al server interrotta");
+  check(sock_recvmatch(sock, m), 4, ERR4);
   match_show(m);
 
  
@@ -67,17 +70,20 @@ int main() {
 
     } else {
 
-      char buffer;
-
       printf(CHOOSESTACK);
-      scanf(" %c", &buffer);
+      choice = getnatural()-1;
       // mi assicuro di ricevere un input corretto
-      while (buffer != '1' && buffer != '2'){
+      while (choice != 0 && choice != 1){
         printf("Errore. %s", CHOOSESTACK);
-        scanf(" %c", &buffer);
+        choice = getnatural()-1;
       }
-      choice = atoi(&buffer)-1;
-      sock_sendmsg(sock, &buffer);
+      // invio all'arbitro la scelta dell'utente
+      buffer = malloc(sizeof(int));
+      // converto choice in (char *)
+      sprintf(buffer, "%d", choice);
+      check(sock_sendmsg(sock, buffer), 4, ERR4);
+
+      free(buffer);
 
     }
     
@@ -89,34 +95,35 @@ int main() {
 
     printf(REMOVEELTS, elts_tot);
 
-    int elts_toremove; // numero di elementi che l'utente vuole rimuovere dalla pila
-    // TODO implementare il controllo che elts sia un numero e non altro
-    scanf(" %d", &elts_toremove);
+    // numero di elementi che l'utente vuole rimuovere dalla pila
+    int elts_toremove = getnatural(); 
+    
     // mi assicuro di ricevere un input corretto
     while (elts_toremove < 1 || elts_toremove > elts_tot){
       printf("Errore. ");
       printf(REMOVEELTS, elts_tot);
-      scanf(" %d", &elts_toremove);
+      elts_toremove = getnatural();
     }
 
+    
     // invio all'arbitro la scelta dell'utente
-    char *buffer = malloc(sizeof(int));
-    // converto elts_toremove in (char *)
-    sprintf(buffer, "%d", elts_toremove);
-    sock_sendmsg(sock, buffer);
+    buffer = malloc(sizeof(int));
+    // converto choice in (char *)
+    sprintf(buffer, "%d", choice);
+    check(sock_sendmsg(sock, buffer), 4, ERR4);
+
+    free(buffer);
 
 
     // mi preparo all'iterazione i+1-esima
 
     // 1) Ricezione del messaggio del turno
     printf("\n");
-    f = sock_recvmsg(sock);
-    check(f, 3, "connessione al server interrotta");
+    check( sock_recvmsg(sock), 4, ERR4);
 
 
     // 2) Ricezione della rappresentazione del match
-    f = sock_recvmatch(sock, m);
-    check(f, 3, "connessione al server interrotta");
+    check(sock_recvmatch(sock, m), 4, ERR4);
     match_show(m);
 
   }
@@ -124,4 +131,12 @@ int main() {
   fprintf(stderr, ENDGAME);
 
 
+}
+
+int getnatural(){
+  int i;
+  char buffer[BUFFER_LINE+1];
+  fgets(buffer,BUFFER_LINE,stdin);
+  i = atoi(buffer);
+  return i;
 }
