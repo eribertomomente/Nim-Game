@@ -52,8 +52,8 @@ void *arbiter(void *args){
 	fprintf(stderr, ENDGAME);
 
 	match_destroy(m);
-	close(client0_fd);
-	close(client1_fd);
+	check( close(client0_fd), 5, ERR5);
+	check( close(client1_fd), 5, ERR5);
 
 	return 0;
 }

@@ -24,6 +24,7 @@ void check(int result, int exitval, const char *msg);
 #define ERR2 "Errore nel bind/connessione di un nuovo client\nPartita terminata :(\n"
 #define ERR3 "Errore nell'accettazione di un nuovo client\nPartita terminata :(\n"
 #define ERR4 "Errore nello scambio di messaggi\nPartita terminata :(\n"
+#define ERR5 "Errore nella chiusura del socket\n"
 #define ERRSERVER "Errore nella risposta dal client\n"
 #define BUFFER_LINE 3
 

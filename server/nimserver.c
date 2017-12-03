@@ -1,13 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
 #include <errno.h>
 #include <unistd.h>
-#include <sys/types.h>
 #include <sys/un.h> // per struct sockaddr_un
 #include <sys/socket.h>
-#include <string.h>
 #include <pthread.h>
 
 #include "../common.h"
@@ -94,6 +90,10 @@ int main (int argc, char **argv)
     // Thread arbitro
     pthread_create(&thr,NULL,arbiter,(void *)pair);
 
+    // aspetto la sua terminazione
+    pthread_join(thr, NULL);
+
+    return 0;
   }
 }
 

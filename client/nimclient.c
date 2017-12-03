@@ -1,21 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
 #include <unistd.h>
 #include <sys/un.h>
-#include <sys/types.h>
 #include <sys/socket.h>
-#include <stdio.h>
-#include <ctype.h>
-
-#define MAXLENGTH 80
 
 #include "../common.h"
 #include "../sock/sock.h"
 
 /*
- *  TODO
+ *  "getnatural" reads an integer from stdin. 
+ *    It returns that int.
  */
 int getnatural();
 
@@ -128,6 +122,9 @@ int main() {
 
   }
 
+  // chiudo il socket
+  check(close(sock), 5, ERR5);
+
   fprintf(stderr, ENDGAME);
 
 
@@ -137,7 +134,10 @@ int getnatural(){
   int i;
   char buffer[BUFFER_LINE+1];
   fgets(buffer,BUFFER_LINE,stdin);
+
+  // libero lo stdin da eventuali altri caratteri
   fseek(stdin,0,SEEK_END);
+
   i = atoi(buffer);
   return i;
 }
