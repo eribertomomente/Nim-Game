@@ -8,7 +8,7 @@
  */
 struct match{
 	int stack0, stack1;
-	char turn;
+	int turn;
 };
 
 /* 

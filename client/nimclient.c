@@ -13,6 +13,15 @@
  */
 int getnatural();
 
+void client_check(int result, int exitval, char *msg, int fd) {
+  if(result == -1) {
+    close(fd);
+    printf("%s\n", msg);
+    exit(exitval);
+  }
+}
+
+
 int main() {
 
   struct match* m;  // partita a nim
@@ -23,6 +32,8 @@ int main() {
   int sock = socket(AF_LOCAL, SOCK_STREAM, 0);
   check(sock, 1, ERR1);
 
+  signal(SIGPIPE, SIG_IGN);
+
   // imposto l'indirizzo
   struct sockaddr_un addr = {
     .sun_family = AF_LOCAL,
@@ -31,21 +42,20 @@ int main() {
 
   // mi connetto al server
   int connected = connect(sock, (struct sockaddr *)&addr, sizeof addr);
-  check(connected, 2, ERR2);
+  client_check(connected, 2, ERR2, sock);
 
   // ricezione e stampa a video dei messaggi di benvenuto e inizializzazione del server
   for(int i =0; i <3; i++){
-    check(sock_recvmsg(sock), 4, ERR4);
+    client_check(sock_recvmsg(sock), 4, ERR4, sock);
   }
   
 
   // 1) Ricezione del messaggio del turno
   printf("\n");
-  check(sock_recvmsg(sock), 4, ERR4);
-
+  client_check(sock_recvmsg(sock), 4, GAMEOVER, sock);
 
   // 2) Ricezione della rappresentazione del match
-  check(sock_recvmatch(sock, m), 4, ERR4);
+  client_check(sock_recvmatch(sock, m), 4, GAMEOVER, sock);
   match_show(m);
 
  
@@ -113,11 +123,11 @@ int main() {
 
     // 1) Ricezione del messaggio del turno
     printf("\n");
-    check( sock_recvmsg(sock), 4, ERR4);
+    client_check( sock_recvmsg(sock), 4, GAMEOVER, sock);
 
 
     // 2) Ricezione della rappresentazione del match
-    check(sock_recvmatch(sock, m), 4, ERR4);
+    client_check(sock_recvmatch(sock, m), 4, GAMEOVER, sock);
     match_show(m);
 
   }
@@ -125,7 +135,7 @@ int main() {
   // chiudo il socket
   check(close(sock), 5, ERR5);
 
-  fprintf(stderr, ENDGAME);
+  fprintf(stdin, ENDGAME);
 
 
 }

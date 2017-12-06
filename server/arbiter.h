@@ -9,4 +9,4 @@ void *arbiter(void *args);
  * "m" is the current match
  * "client" is the fd of the player who is currently playing
  */
-struct match *make_move (int client, struct match *m);
+struct match *make_move (int main_client, int other_client, struct match *m);

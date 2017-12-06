@@ -93,8 +93,10 @@ int main (int argc, char **argv)
     // aspetto la sua terminazione
     pthread_join(thr, NULL);
 
-    return 0;
+    
   }
+
+  return 0;
 }
 
 

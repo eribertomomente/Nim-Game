@@ -26,6 +26,8 @@ void check(int result, int exitval, const char *msg);
 #define ERR4 "Errore nello scambio di messaggi\nPartita terminata :(\n"
 #define ERR5 "Errore nella chiusura del socket\n"
 #define ERRSERVER "Errore nella risposta dal client\n"
+#define ENEMYGONE "L'altro giocatore ha abbandonato la partita.\n"
+#define GAMEOVER "Partita terminata :(\n"
 #define BUFFER_LINE 3
 
 

@@ -5,11 +5,22 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <sys/socket.h>
+#include <pthread.h>
 
 #include "arbiter.h"
 #include "../sock/sock.h"
 #include "../match/match.h"
 #include "../common.h"
+
+void arbiter_check(int f, int exitval, int fd0, int fd1, struct match *m){
+	if (f == -1 && fd1 != -1){
+		sock_sendmsg(fd1, ENEMYGONE);
+		close(fd0);
+		close(fd1);
+		match_destroy(m);
+		pthread_exit(0);
+	}
+}
 
 
 void *arbiter(void *args){
@@ -25,11 +36,11 @@ void *arbiter(void *args){
 	while (!match_isover(m) ){
 
 		if (m->turn == 0){
-			m = make_move(client0_fd, m);
+			m = make_move(client0_fd, client1_fd, m);
 			m->turn = 1;		
 
 		} else if (m->turn == 1){
-			m = make_move(client1_fd, m);
+			m = make_move(client1_fd, client0_fd, m);
 			m->turn = 0;
 		}
 	}
@@ -49,8 +60,7 @@ void *arbiter(void *args){
 	check(sock_sendmatch(client0_fd, m), 4, ERR4);
 	check(sock_sendmatch(client1_fd, m), 4, ERR4);
 		
-	fprintf(stderr, ENDGAME);
-
+	fprintf(stdin, ENDGAME);
 	match_destroy(m);
 	check( close(client0_fd), 5, ERR5);
 	check( close(client1_fd), 5, ERR5);
@@ -61,16 +71,18 @@ void *arbiter(void *args){
 
 
 
-struct match *make_move (int client, struct match *m){
+struct match *make_move (int main_client, int other_client, struct match *m){
 	
 	// flag per eventuali errori
 	int f;
 
 	// 1) Invio del messaggio del turno
-	f=sock_sendmsg(client,YOURTURN);
+	f=sock_sendmsg(main_client,YOURTURN);
+	arbiter_check(f, 3, main_client, other_client, m);
 
-	// 2) Invio di una partita 
-	f=sock_sendmatch(client,m);
+	// 2) Invio di una partita
+	f=sock_sendmatch(main_client,m);
+	arbiter_check(f, 3, main_client, other_client, m);
 
 
 	// 3) Scelta della pila
@@ -84,8 +96,8 @@ struct match *make_move (int client, struct match *m){
 
 		char *buffer = malloc(sizeof(char));
 
-		f = sock_readmsg(client, buffer);
-		check(f, 3, ERRSERVER);
+		f = sock_readmsg(main_client, buffer);
+		arbiter_check(f, 3, main_client, other_client, m);
 
 		// cast della risposta dal client in int
 		stack_choice = atoi(buffer);
@@ -98,8 +110,8 @@ struct match *make_move (int client, struct match *m){
   	// 4) scelta del numero di elementi da rimuovere
 	char *buffer = malloc(sizeof(int));
 
-	f= sock_readmsg(client, buffer);
-	check(f, 3, "Errore nella risposta dal client");
+	f= sock_readmsg(main_client, buffer);
+	arbiter_check(f, 3, main_client, other_client, m);
 	
 	// cast della risposta dal client in int
 	int elts_toremove = atoi(buffer);
