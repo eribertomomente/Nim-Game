@@ -1,3 +1,5 @@
+#ifndef COMMON
+#define COMMON
 /*
  * Percorso del socket per la comunicazione
  */
@@ -31,3 +33,4 @@ void check(int result, int exitval, const char *msg);
 #define BUFFER_LINE 3
 
 
+#endif

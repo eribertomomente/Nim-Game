@@ -1,3 +1,6 @@
+#ifndef SOCK
+#define SOCK
+
 #include "../match/match.h"
 
 /* "sock_sendmsg" sends "msg" through the socket identified by "fd".
@@ -25,3 +28,5 @@ int sock_sendmatch(int fd, struct match *m);
  *  It returns 0 if everything works fine, -1 otherwise.
  */
 int sock_recvmatch(int fd, struct match *m);
+
+#endif

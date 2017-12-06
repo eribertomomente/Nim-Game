@@ -12,16 +12,10 @@
 #include "../match/match.h"
 #include "../common.h"
 
-void arbiter_check(int f, int exitval, int fd0, int fd1, struct match *m){
-	if (f == -1 && fd1 != -1){
-		sock_sendmsg(fd1, ENEMYGONE);
-		close(fd0);
-		close(fd1);
-		match_destroy(m);
-		pthread_exit(0);
-	}
-}
-
+/*
+ * "arbiter_check" checks each communication with the clients and exit in error cases
+ */
+void arbiter_check(int f, int exitval, int fd0, int fd1, struct match *m);
 
 void *arbiter(void *args){
 
@@ -127,5 +121,15 @@ struct match *make_move (int main_client, int other_client, struct match *m){
 
   	return m;
 
+}
+
+void arbiter_check(int f, int exitval, int fd0, int fd1, struct match *m){
+	if (f == -1 && fd1 != -1){
+		sock_sendmsg(fd1, ENEMYGONE);
+		close(fd0);
+		close(fd1);
+		match_destroy(m);
+		pthread_exit(0);
+	}
 }
 

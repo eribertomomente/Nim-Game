@@ -8,7 +8,7 @@ nimserver: nimserver.o common.o sock.o arbiter.o
 	clang nimserver.o sock.o common.o arbiter.o match.o -o nimserver
 
 
-common.o: common.c common.h 
+common.o: common.c common.h
 	clang -c common.c
 
 match.o: match/match.h match/match.c

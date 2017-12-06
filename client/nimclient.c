@@ -13,14 +13,10 @@
  */
 int getnatural();
 
-void client_check(int result, int exitval, char *msg, int fd) {
-  if(result == -1) {
-    close(fd);
-    printf("%s\n", msg);
-    exit(exitval);
-  }
-}
-
+/*
+ * "client_check" checks each communication with the server and exit in error cases
+ */
+void client_check(int result, int exitval, char *msg, int fd);
 
 int main() {
 
@@ -150,4 +146,12 @@ int getnatural(){
 
   i = atoi(buffer);
   return i;
+}
+
+void client_check(int result, int exitval, char *msg, int fd) {
+  if(result == -1) {
+    close(fd);
+    printf("%s\n", msg);
+    exit(exitval);
+  }
 }
